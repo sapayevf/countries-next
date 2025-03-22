@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -6,7 +6,7 @@ import Image from "next/image";
 import "../../../app/globals.css";
 
 interface Country {
-  name: string;
+  name: string; 
   population: number;
   region: string;
   subregion: string;
@@ -15,14 +15,17 @@ interface Country {
 }
 
 export default function CountryDetails() {
-  const params = useParams(); 
-  const countryName = decodeURIComponent(params?.name as string);
-
+  const params = useParams(); // Next.js paramsni olish uchun
   const [country, setCountry] = useState<Country | null>(null);
 
   useEffect(() => {
-    if (!countryName) return;
-    fetch(`https://restcountries.com/v3.1/name/${countryName}`)
+    if (!params?.name) return;
+
+    fetch(
+      `https://restcountries.com/v3.1/name/${decodeURIComponent(
+        params.name as string
+      )}`
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) {
@@ -37,7 +40,7 @@ export default function CountryDetails() {
           });
         }
       });
-  }, [countryName]);
+  }, [params]);
 
   if (!country) return <p>Loading...</p>;
 
