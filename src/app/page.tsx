@@ -1,8 +1,10 @@
 "use client"
 
+
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import "../app/globals.css";
 
 interface Country {
@@ -20,11 +22,17 @@ export default function Home() {
     fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
       .then((data) => {
-        const formattedData = data.map((country: any) => ({
-          name: country.name.common,
-          population: country.population,
-          flag: country.flags.svg,
-        }));
+        const formattedData: Country[] = data.map(
+          (country: {
+            name: { common: string };
+            population: number;
+            flags: { svg: string };
+          }) => ({
+            name: country.name.common,
+            population: country.population,
+            flag: country.flags.svg,
+          })
+        );
         setCountries(formattedData);
         setFilteredCountries(formattedData);
       });
@@ -40,7 +48,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title style={{fontWeight: "600", fontSize: "24px"}}>Countries</title>
+        <title>Countries</title>
       </Head>
       <main className="p-6">
         <h1 className="text-3xl font-bold mb-4">Countries List</h1>
@@ -54,12 +62,13 @@ export default function Home() {
         <ul className="county">
           {filteredCountries.map((country, index) => (
             <li key={index} className="p-4 border-b">
-              <Link href={`/details/${country.name}`}>
+              <Link href={`/details/${encodeURIComponent(country.name)}`}>
                 <div className="flex items-center space-x-4">
-                  <img
+                  <Image
                     src={country.flag}
                     alt={country.name}
-                    className="w-10 h-6"
+                    width={100}
+                    height={100}
                   />
                   <span>
                     {country.name} - {country.population.toLocaleString()}

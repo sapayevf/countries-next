@@ -1,6 +1,9 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import "../../../app/globals.css";
 
 interface Country {
   name: string;
@@ -11,18 +14,15 @@ interface Country {
   flag: string;
 }
 
-export default function CountryDetails({
-  params,
-}: {
-  params: { name: string };
-}) {
+export default function CountryDetails() {
+  const params = useParams(); 
+  const countryName = decodeURIComponent(params?.name as string);
+
   const [country, setCountry] = useState<Country | null>(null);
 
   useEffect(() => {
-    if (!params?.name) return;
-    fetch(
-      `https://restcountries.com/v3.1/name/${decodeURIComponent(params.name)}`
-    )
+    if (!countryName) return;
+    fetch(`https://restcountries.com/v3.1/name/${countryName}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) {
@@ -37,14 +37,14 @@ export default function CountryDetails({
           });
         }
       });
-  }, [params.name]);
+  }, [countryName]);
 
   if (!country) return <p>Loading...</p>;
 
   return (
     <div className="p-6">
       <h1 className="text-4xl font-bold">{country.name}</h1>
-      <img src={country.flag} alt={country.name} className="w-40 mt-4" />
+      <Image src={country.flag} alt={country.name} width={160} height={96} />
       <p>Population: {country.population.toLocaleString()}</p>
       <p>Region: {country.region}</p>
       <p>Subregion: {country.subregion}</p>
