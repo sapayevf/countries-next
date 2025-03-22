@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 
 import Head from "next/head";
 import Link from "next/link";
@@ -21,18 +20,12 @@ export default function Home() {
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
-      .then((data) => {
-        const formattedData: Country[] = data.map(
-          (country: {
-            name: { common: string };
-            population: number;
-            flags: { svg: string };
-          }) => ({
-            name: country.name.common,
-            population: country.population,
-            flag: country.flags.svg,
-          })
-        );
+      .then((data: any[]) => {
+        const formattedData: Country[] = data.map((country) => ({
+          name: country.name.common,
+          population: country.population,
+          flag: country.flags.svg,
+        }));
         setCountries(formattedData);
         setFilteredCountries(formattedData);
       });
@@ -67,8 +60,8 @@ export default function Home() {
                   <Image
                     src={country.flag}
                     alt={country.name}
-                    width={100}
-                    height={100}
+                    width={40}
+                    height={24}
                   />
                   <span>
                     {country.name} - {country.population.toLocaleString()}

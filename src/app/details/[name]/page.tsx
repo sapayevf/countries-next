@@ -6,7 +6,7 @@ import Image from "next/image";
 import "../../../app/globals.css";
 
 interface Country {
-  name: string; 
+  name: string;
   population: number;
   region: string;
   subregion: string;
@@ -15,7 +15,7 @@ interface Country {
 }
 
 export default function CountryDetails() {
-  const params = useParams(); // Next.js paramsni olish uchun
+  const params = useParams(); 
   const [country, setCountry] = useState<Country | null>(null);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function CountryDetails() {
       )}`
     )
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: any[]) => {
         if (data.length > 0) {
           const c = data[0];
           setCountry({
